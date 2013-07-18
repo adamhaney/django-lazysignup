@@ -36,7 +36,12 @@ class LazyUserManager(models.Manager):
         """
         user_class = self.model.get_user_class()
         username = self.generate_username(user_class)
-        user = user_class.objects.create_user(username, '')
+        email = "{}@fakeuser.com".format(username)
+
+        # Create a unique email for this fake user to avoid a
+        # collision if a uniqueness constraint has been added to
+        # emails
+        user = user_class.objects.create_user(username, '', email)
         self.create(user=user)
         return user, username
 
